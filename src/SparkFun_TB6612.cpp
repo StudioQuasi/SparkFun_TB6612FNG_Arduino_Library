@@ -32,12 +32,22 @@ Motor::Motor(int In1pin, int In2pin, int PWMpin, int offset, int STBYpin)
   pinMode(In1, OUTPUT);
   pinMode(In2, OUTPUT);
   pinMode(PWM, OUTPUT);
-  pinMode(Standby, OUTPUT);
+
+  isStandby = false;
+
+  if (STBYpin != -1) {
+
+    isStandby = true;
+    pinMode(Standby, OUTPUT);
+  }
+
 }
 
 void Motor::drive(int speed)
 {
-  digitalWrite(Standby, HIGH);
+  if (isStandby)
+    digitalWrite(Standby, HIGH);
+  
   speed = speed * Offset;
   if (speed>=0) fwd(speed);
   else rev(-speed);
